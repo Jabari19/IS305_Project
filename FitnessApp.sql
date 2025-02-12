@@ -1,5 +1,3 @@
-DROP DATABASE IF EXISTS Fitness_Tracker;
-
 -- Create the database
 CREATE DATABASE Fitness_Tracker;
 
