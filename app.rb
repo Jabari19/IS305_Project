@@ -1,15 +1,13 @@
 require 'sinatra'
 require 'sinatra/activerecord'
 require 'bcrypt'
-require './models/user'
 
-set :database, { adapter: 'mysql2', database: 'workout_db', username: 'root', password: '', host: 'localhost' }
+set :database, { adapter: 'sqlite3', database: 'db/workout_tracker.db' }
 
-enable :sessions
-
-get '/' do
-  erb :index
+class User < ActiveRecord::Base
+  has_secure_password  # Provides authentication methods
 end
+
 
 post '/login' do
   user = User.find_by(username: params[:username])
