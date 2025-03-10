@@ -15,12 +15,16 @@
             padding: 0;
         }
         header {
-            background-color: #333;
+            background-color: #f34c4c;
             color: white;
             padding: 15px;
         }
         main {
             margin-top: 50px;
+            display:flex;
+            justify-content: flex-end;
+            flex-direction: column;
+            align-items: center;
         }
         #auth-container {
             background: white;
@@ -28,6 +32,17 @@
             border-radius: 5px;
             box-shadow: 0px 0px 10px rgba(0,0,0,0.1);
             display: inline-block;
+            margin-bottom: 40px;
+        }
+        .image-container {
+            display: flex;
+            justify-content: space-around;
+            width: 80%;
+            margin-top: 20px;
+        }
+        .image-container img {
+            width: 30%;
+            border-radius: 10px;
         }
         button {
             margin: 10px;
@@ -52,7 +67,16 @@
             border: 1px solid #ccc;
             border-radius: 5px;
         }
-    </style>
+        footer {
+            background-color: #f34c4c;
+            color: white;
+            padding: 10px;
+            position: fixed;
+            bottom: 0;
+            width: 100%;
+            text-align: center;
+        }
+        </style>
     <script>
         function showLogin() {
             document.getElementById('login-form').classList.remove('hidden');
@@ -68,7 +92,7 @@
             let username = document.getElementById('login-username').value;
             let password = document.getElementById('login-password').value;
             
-            // Simulate successful login and redirect
+            // successful login and redirect
             if (username && password) {
                 window.location.href = 'dashboard.html?user=' + encodeURIComponent(username);
             } else {
@@ -80,7 +104,7 @@
             let username = document.getElementById('register-username').value;
             let password = document.getElementById('register-password').value;
             
-            // Simulate successful registration and redirect
+            // successful registration and redirect
             if (username && password) {
                 window.location.href = 'dashboard.html?user=' + encodeURIComponent(username);
             } else {
@@ -91,7 +115,7 @@
 </head>
 <body>
     <header>
-        <h1>Welcome to Workout Tracker</h1>
+        <h1>Lifestyle_Fitness</h1>
     </header>
     <main>
         <div id="auth-container">
@@ -114,5 +138,8 @@
             </div>
         </div>
     </main>
+    <footer>
+        <p>&copy; 2025 Lifestyle_Fitness | All Rights Reserved</p>
+    </footer>
 </body>
 </html>
