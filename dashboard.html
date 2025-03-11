@@ -46,17 +46,54 @@
             text-align: left;
             margin-top: 20px;
         }
+        label {
+            font-size: 18px;
+            margin-right: 10px;
+        }
+        select, input[type="date"] {
+            padding: 10px;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+        }
+        .workout-summary {
+            margin-top: 20px;
+            background-color: #f9f9f9;
+            padding: 20px;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+        }
+        .workout-summary h3 {
+            margin-top: 0;
+        }
     </style>
     <script>
         document.addEventListener("DOMContentLoaded", function() {
             const urlParams = new URLSearchParams(window.location.search);
             const username = urlParams.get("user");
-            
+
             if (username) {
                 document.getElementById("username").textContent = username;
             } else {
                 window.location.href = "index.html"; // Redirect if no user is logged in
             }
+
+            // Handle form submission for workout plan
+            document.getElementById('submit-workout').addEventListener('click', function() {
+                const selectedGoal = document.getElementById('goal').value;
+                const selectedExercise = document.getElementById('exercise').value;
+                const workoutDate = document.getElementById('workout-date').value;
+
+                if (selectedGoal && selectedExercise && workoutDate) {
+                    document.getElementById('workout-summary').innerHTML = `
+                        <h3>Your Workout Plan:</h3>
+                        <p><strong>Goal:</strong> ${selectedGoal}</p>
+                        <p><strong>Exercise:</strong> ${selectedExercise}</p>
+                        <p><strong>Workout Date:</strong> ${workoutDate}</p>
+                    `;
+                } else {
+                    alert("Please complete all fields before submitting.");
+                }
+            });
         });
     </script>
 </head>
@@ -71,12 +108,54 @@
             <a href="#">Goals</a>
             <a href="#">Calendar</a>
         </div>
-        <h2>Welcome, <span id="username">User</span></h2>
+        <h2 class="welcome-header">Welcome, <span id="username">User</span></h2>
         <div class="profile-info">
             <h3>Profile Details</h3>
             <p><strong>Username:</strong> <span id="username"></span></p>
-            <p><strong>Goals:</strong> Build muscle, Lose weight, Stay fit</p>
+            <p><strong>Current Goal:</strong> Build muscle, Lose weight, Stay fit</p>
             <p><strong>Workout Schedule:</strong> Monday, Wednesday, Friday</p>
+        </div>
+        
+
+        <!-- Workout Plan Form -->
+        <div class="workout-plan">
+            <h3>Create Your Workout Plan</h3>
+            <div class="form-group">
+                <label for="goal">Choose Your Goal:</label>
+                <select id="goal">
+                    <option value="Build Muscle">Build Muscle</option>
+                    <option value="Lose Weight">Lose Weight</option>
+                    <option value="Stay Fit">Stay Fit</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="exercise">Choose Your Exercise:</label>
+                <select id="exercise">
+                    <option value="Push-ups">Push-ups</option>
+                    <option value="Squats">Squats</option>
+                    <option value="Running">Running</option>
+                    <option value="Yoga">Yoga</option>
+                    <option value="Weightlifting">Weightlifting</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="workout-date">Pick a Date:</label>
+                <input type="date" id="workout-date">
+            </div>
+            <div class="form-group">
+                <label for="workout-minutes">Time?</label>
+                <input type="number" id="workout-minutes" placeholder="Minutes" min="1" max="180">
+            </div>
+            <button id="submit-workout">Create Plan</button>
+        </div>
+
+        <!-- Workout Summary Display -->
+        <div id="workout-summary" class="workout-summary">
+            <h3>Your Workout Plan:</h3>
+            <p><strong>Goal:</strong> -</p>
+            <p><strong>Exercise:</strong> -</p>
+            <p><strong>Workout Date:</strong> -</p>
+            <p><strong>Duration:</strong> - minutes</p>
         </div>
     </div>
 </body>
