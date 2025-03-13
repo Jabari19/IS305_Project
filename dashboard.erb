@@ -1,11 +1,58 @@
-get '/dashboard' do
-  if session[:user_id]
-    @user = User.find(session[:user_id])  # Retrieve user data based on session
-    @workouts = @user.workouts.includes(:exercises).order(date: :desc)  # Get the workouts and exercises for the user
-    @goals = @user.goals.order(target_date: :desc)  # Get the user's goals
-    @nutrition = @user.nutrition.order(date: :desc)  # Get the user's nutrition records
-    erb :dashboard  # This will render the user dashboard view (HTML content)
-  else
-    redirect '/'  # If the user is not logged in, redirect to the login page
-  end
-end
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>User Dashboard</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <header>
+        <h1>User Dashboard</h1>
+    </header>
+    <div class="container">
+        <div class="nav-links">
+            <a href="/">Home</a>
+            <a href="#">My Workouts</a>
+            <a href="#">Goals</a>
+            <a href="#">Calendar</a>
+        </div>
+        <h2>Welcome, <%= @user.username %></h2>
+        <div class="profile-info">
+            <h3>Profile Details</h3>
+            <p><strong>Username:</strong> <%= @user.username %></p>
+            <p><strong>Role:</strong> <%= @user.role %></p>
+            <p><strong>Age:</strong> <%= @user.age %></p>
+        </div>
+
+        <!-- Display User Workouts -->
+        <h3>Your Workouts</h3>
+        <% @workouts.each do |workout| %>
+            <div class="workout">
+                <h4><%= workout.date %></h4>
+                <ul>
+                    <% workout.exercises.each do |exercise| %>
+                        <li><%= exercise.name %> - Sets: <%= exercise.sets %>, Reps: <%= exercise.reps %></li>
+                    <% end %>
+                </ul>
+            </div>
+        <% end %>
+
+        <!-- Display Goals -->
+        <h3>Your Goals</h3>
+        <% @goals.each do |goal| %>
+            <div class="goal">
+                <p><%= goal.goal_description %> (Target Date: <%= goal.target_date %>)</p>
+            </div>
+        <% end %>
+
+        <!-- Display Nutrition Records -->
+        <h3>Your Nutrition</h3>
+        <% @nutrition.each do |meal| %>
+            <div class="nutrition">
+                <p><%= meal.meal %> - Calories: <%= meal.calories %> - Protein: <%= meal.protein %>g - Fat: <%= meal.fat %>g - Carbs: <%= meal.carbs %>g</p>
+            </div>
+        <% end %>
+    </div>
+</body>
+</html>

@@ -9,19 +9,10 @@ CREATE TABLE Users (
     first_name VARCHAR(50) NOT NULL,
     last_name VARCHAR(50) NOT NULL,
     email VARCHAR(100) UNIQUE NOT NULL,
-   password_digest VARCHAR(255) NOT NULL,
+    password_digest VARCHAR(255) NOT NULL,
     role ENUM('user', 'admin') NOT NULL DEFAULT 'user',
     age INT(3) NULL,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-);
-
--- Login Log Table
-CREATE TABLE login_log (
-    id INT AUTO_INCREMENT PRIMARY KEY,
-    user_id INT NOT NULL,
-    login_time TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    logout_time TIMESTAMP NULL,
-    FOREIGN KEY (user_id) REFERENCES Users(user_id) ON DELETE CASCADE
 );
 
 -- Exercises Table
@@ -65,14 +56,6 @@ CREATE TABLE Nutrition (
     FOREIGN KEY (user_id) REFERENCES Users(user_id) ON DELETE CASCADE
 );
 
--- Equipment Table
-CREATE TABLE Equipment (
-    equipment_id INT AUTO_INCREMENT PRIMARY KEY,
-    name VARCHAR(100) NOT NULL,
-    description TEXT,
-    type VARCHAR(50)
-);
-
 -- Goals Table
 CREATE TABLE Goals (
     goal_id INT AUTO_INCREMENT PRIMARY KEY,
@@ -82,35 +65,12 @@ CREATE TABLE Goals (
     FOREIGN KEY (user_id) REFERENCES Users(user_id) ON DELETE CASCADE
 );
 
--- Trainers Table
-CREATE TABLE Trainers (
-    trainer_id INT AUTO_INCREMENT PRIMARY KEY,
-    first_name VARCHAR(50) NOT NULL,
-    last_name VARCHAR(50) NOT NULL,
-    certification VARCHAR(100) NOT NULL
-);
-
--- ActivityLog Table
-CREATE TABLE ActivityLog (
-    id INT AUTO_INCREMENT PRIMARY KEY,
-    user_id INT NOT NULL,
-    action VARCHAR(255) NOT NULL,
-    timestamp DATETIME DEFAULT CURRENT_TIMESTAMP,
-    details TEXT,
-    FOREIGN KEY (user_id) REFERENCES Users(user_id) ON DELETE CASCADE
-);
 -- Insert users
 INSERT INTO Users (first_name, last_name, email, password, role, age) VALUES 
 ('Alice', 'Smith', 'alice@yahoo.com', '$2y$10$...hash...', 'user', 28),
 ('Bob', 'Johnson', 'bob@gmail.com', '$2y$10$...hash...', 'user', 32),
 ('Charlie', 'Brown', 'charlie@gmail.com', '$2y$10$...hash...', 'user', 25),
 ('Admin', 'User', 'admin@yahoo.com', '$2y$10$...hash...', 'admin', 40);
-
--- Insert login logs
-INSERT INTO login_log (user_id, login_time, logout_time) VALUES
-(1, '2024-12-01 08:00:00', '2024-12-01 08:30:00'),
-(2, '2024-12-01 09:00:00', '2024-12-01 09:45:00'),
-(3, '2024-12-01 10:00:00', '2024-12-01 10:30:00');
 
 -- Insert exercises
 INSERT INTO Exercises (name, description, category) VALUES
@@ -131,11 +91,3 @@ INSERT INTO Workout_Exercises (workout_id, exercise_id, sets, reps) VALUES
 -- Insert nutrition records
 INSERT INTO Nutrition (user_id, meal, calories, protein, fat, carbs, date) VALUES
 (1, 'Chicken Salad', 400, 30, 15, 35, '2024-12-01 12:00:00');
-
--- Insert trainers
-INSERT INTO Trainers (first_name, last_name, certification) VALUES
-('John', 'Henry', 'Certified Personal Trainer');
-
--- Insert activity logs
-INSERT INTO ActivityLog (user_id, action, details) VALUES 
-(1, 'Logged in', 'Accessed dashboard');
