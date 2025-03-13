@@ -1,0 +1,11 @@
+get '/dashboard' do
+  if session[:user_id]
+    @user = User.find(session[:user_id])  # Retrieve user data based on session
+    @workouts = @user.workouts.includes(:exercises).order(date: :desc)  # Get the workouts and exercises for the user
+    @goals = @user.goals.order(target_date: :desc)  # Get the user's goals
+    @nutrition = @user.nutrition.order(date: :desc)  # Get the user's nutrition records
+    erb :dashboard  # This will render the user dashboard view (HTML content)
+  else
+    redirect '/'  # If the user is not logged in, redirect to the login page
+  end
+end

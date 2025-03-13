@@ -1,62 +1,43 @@
 require 'sinatra'
 require 'sinatra/activerecord'
-require 'mysql2'
+require 'bcrypt'
 
-# Database Configuration
-set :database, {
-  adapter: 'mysql2',
-  host: 'localhost',
-  username: 'root',
-  password: '',      
-  database: 'WorkoutDB'
-}
+set :database, { adapter: 'sqlite3', database: 'db/workout_tracker.db' }
 
-# Define User model
 class User < ActiveRecord::Base
-  self.table_name = "Users"
+  has_secure_password  # Provides authentication methods
+
+  # Associations
+  has_many :workouts
+  has_many :nutrition
+  has_many :goals
+  has_many :workout_exercises, through: :workouts
 end
 
-# Home Route - Fetch All Users
-get '/' do
-  @users = User.all
-  erb :index
-end
 
-# Get User by ID
-get '/user/:id' do
-  @user = User.find_by(id: params[:id])
-  if @user
-    erb :user
+post '/login' do
+  user = User.find_by(username: params[:username])
+  if user && BCrypt::Password.new(user.password_digest) == params[:password]
+    session[:user_id] = user.id
+    redirect '/dashboard'
   else
-    "User not found"
+    "Invalid username or password."
   end
 end
 
-__END__
+post '/register' do
+  existing_user = User.find_by(username: params[:username])
+  if existing_user
+    "Username already exists."
+  else
+    hashed_password = BCrypt::Password.create(params[:password])
+    user = User.create(username: params[:username], password_digest: hashed_password)
+    session[:user_id] = user.id
+    redirect '/dashboard'
+  end
+end
 
-@@ layout
-<!DOCTYPE html>
-<html>
-<head>
-    <title>WorkoutDB App</title>
-</head>
-<body>
-    <h1>Workout Database</h1>
-    <%= yield %>
-</body>
-</html>
-
-@@ index
-<h2>Users List</h2>
-<ul>
-  <% @users.each do |user| %>
-    <li><a href="/user/<%= user.user_id %>"><%= user.first_name %> <%= user.last_name %></a></li>
-  <% end %>
-</ul>
-
-@@ user
-<h2>User Details</h2>
-<p><strong>Name:</strong> <%= @user.first_name %> <%= @user.last_name %></p>
-<p><strong>Email:</strong> <%= @user.email %></p>
-<p><strong>Role:</strong> <%= @user.role %></p>
-<a href="/">Back to Users</a>
+get '/dashboard' do
+  @user = User.find(session[:user_id]) if session[:user_id]
+  erb :dashboard
+end
