@@ -4,6 +4,10 @@ require 'bcrypt'
 
 set :database, { adapter: 'sqlite3', database: 'db/workout_tracker.db' }
 
+get '/'do
+  erb :index
+end
+
 class User < ActiveRecord::Base
   has_secure_password  # Provides authentication methods
 
